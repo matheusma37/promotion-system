@@ -1,15 +1,17 @@
-<dl>
-  <% @promotions.each do |promotion| %>
-    <dt>Nome</dt>
-    <dd><%= promotion.name %></dd>
-    <dt>Descrição</dt>
-    <dd><%= promotion.description %></dd>
-    <dt>Porcentagem</dt>
-    <dd><%= number_to_percentage(promotion.discount_rate, precision: 2, separator: ',') %></dd>
-    <dt>Código</dt>
-    <dd><%= promotion.code %></dd>
-    <dt>Data de Expiração</dt>
-    <dd><%= promotion.expiration_date %></dd>
-    <hr/>
-  <% end %>
-<dl>
+<% unless @promotions.empty? %>
+  <dl>
+    <% @promotions.each do |promotion| %>
+      <dt>Nome</dt>
+      <dd><%= link_to promotion.name, promotion %></dd>
+      <dt>Descrição</dt>
+      <dd><%= promotion.description %></dd>
+      <dt>Porcentagem</dt>
+      <dd><%= number_to_percentage(promotion.discount_rate, precision: 2, separator: ',') %></dd>
+      <hr/>
+    <% end %>
+  <dl>
+<% else %>
+  <p>'Nenhuma promoção cadastrada'</p>
+<% end %>
+
+<%= link_to 'Voltar', :back %>
