@@ -3,5 +3,5 @@ Rails.application.routes.draw do
   get '/', to: 'home#index'
   root 'home#index'
 
-  resources :promotions, only: %i[index show new create]
+  resources :promotions, only: %i[index show new create edit update]
 end

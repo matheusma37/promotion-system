@@ -36,4 +36,3 @@ feature 'Admin registers a valid promotion' do
     expect(page).to have_content('Código já está em uso')
   end
 end
-
