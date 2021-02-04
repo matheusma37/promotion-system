@@ -2,6 +2,16 @@
   <div class="warning">'Nenhuma promoção cadastrada'</div>
 <% end %>
 
+<% if flash[:success] %>
+  <div class='notice success'>
+    <p><%= flash[:success] %></p>
+  </div>
+<% elsif flash[:error] %>
+  <div class='notice error'>
+    <p><%= flash[:error] %></p>
+  </div>
+<% end %>
+
 <% @promotions.each do |promotion| %>
   <div>
     <dl>

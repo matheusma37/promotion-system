@@ -27,6 +27,7 @@ feature 'Admin deletes a promotion' do
     end
 
     expect(current_path).to eq(promotions_path)
+    expect(page).to have_content('Promoção deletada com sucesso')
     expect(Promotion.last).to eq(nil)
   end
 
