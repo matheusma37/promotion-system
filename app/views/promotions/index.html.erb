@@ -2,13 +2,13 @@
   <div class="warning">'Nenhuma promoção cadastrada'</div>
 <% end %>
 
-<% if flash[:success] %>
+<% if flash[:notice] %>
   <div class='notice success'>
-    <p><%= flash[:success] %></p>
+    <p><%= flash[:notice] %></p>
   </div>
-<% elsif flash[:error] %>
+<% elsif flash[:alert] %>
   <div class='notice error'>
-    <p><%= flash[:error] %></p>
+    <p><%= flash[:alert] %></p>
   </div>
 <% end %>
 

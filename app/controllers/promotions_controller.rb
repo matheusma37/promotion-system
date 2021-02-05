@@ -36,9 +36,9 @@ class PromotionsController < ApplicationController
   def destroy
     @promotion = Promotion.find(params[:id])
     if @promotion.destroy
-      flash[:success] = 'Promoção deletada com sucesso'
+      flash[:notice] = 'Promoção deletada com sucesso'
     else
-      flash[:error] = 'Não foi possível deletar essa promoção'
+      flash[:alert] = 'Não foi possível deletar essa promoção'
     end
 
     redirect_to promotions_path
@@ -46,9 +46,15 @@ class PromotionsController < ApplicationController
 
   def generate_coupons
     promotion = Promotion.find(params[:id])
+    1.upto(promotion.coupon_quantity) do |code|
+      Coupon.create!(
+        code: "#{promotion.code}-#{format('%04d', code)}",
+        promotion: promotion
+      )
+    end
+    flash[:notice] = 'Cupons gerados com sucesso'
     redirect_to promotion
   end
-  
 
   private
 

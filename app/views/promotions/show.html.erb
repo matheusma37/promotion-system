@@ -1,3 +1,9 @@
+<% if flash[:notice] %>
+  <div class='notice success'>
+    <p><%= flash[:notice] %></p>
+  </div>
+<% end %>
+  
 <%= link_to 'Voltar', :back %>
 
 <h1><%= @promotion.name %></h1>
@@ -14,10 +20,16 @@
   <dt><%= @promotion.coupon_quantity %></dt>
 </dl>
 
+<%= link_to 'Gerar cupons',
+            generate_coupons_promotion_path(@promotion),
+            method: :post %>
+
+
+<% @promotion.coupons.each do |coupon| %>
+  <p><%= coupon.code %></p>
+<% end %>
+
 <%= link_to 'Editar promoção', edit_promotion_path(@promotion) %>
 <%= link_to 'Apagar promoção', promotion_path(@promotion),
                   method: :delete,
                   data: { confirm: "Tem certeza que deseja deletar essa promoção?" } %>
-<%= link_to 'Gerar cupons',
-            generate_coupons_promotion_path(@promotion),
-            method: :post %>
