@@ -3,8 +3,8 @@ require 'rails_helper'
 feature 'Admin deletes a promotion' do
   scenario 'from index page' do
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
-                      code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                      expiration_date: '22/12/2033')
+                                  code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                  expiration_date: '22/12/2033')
 
     visit root_path
     click_on 'Promoções'
@@ -16,8 +16,8 @@ feature 'Admin deletes a promotion' do
 
   scenario 'and confirm delete', js: true do
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
-                      code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                      expiration_date: '22/12/2033')
+                                  code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                  expiration_date: '22/12/2033')
 
     visit root_path
     click_on 'Promoções'
@@ -33,8 +33,8 @@ feature 'Admin deletes a promotion' do
 
   scenario 'and cancel delete', js: true do
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
-                      code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                      expiration_date: '22/12/2033')
+                                  code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                  expiration_date: '22/12/2033')
 
     visit root_path
     click_on 'Promoções'
