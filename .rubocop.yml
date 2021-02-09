@@ -1,0 +1,7 @@
+AllCops:   
+  Exclude:     
+    - 'db/**/*'     
+    - 'config/**/*'     
+    - 'libs/**/*'
+Rails:
+  Enabled: true

@@ -78,6 +78,7 @@ describe Promotion do
 
     # TODO: Implementar essa feature
     it 'generate remainder of the coupon codes' do
+      pending
       promotion = Promotion.create!(name: 'Natal',
                                     description: 'Promoção de Natal',
                                     code: 'NATAL10', discount_rate: 10,

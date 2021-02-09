@@ -1,0 +1,5 @@
+pt-BR:
+  promotions:
+    show:
+      active: 'Ativo'
+      inactive: 'Inativo'
