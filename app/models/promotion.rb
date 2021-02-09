@@ -1,5 +1,6 @@
 class Promotion < ApplicationRecord
   has_many :coupons
+  belongs_to :user
 
   validates :name, :code, :discount_rate, :expiration_date, :coupon_quantity, presence: true
   validates :code, uniqueness: true

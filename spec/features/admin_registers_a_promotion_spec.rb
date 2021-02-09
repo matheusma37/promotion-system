@@ -1,7 +1,17 @@
 require 'rails_helper'
 
 feature 'Admin registers a promotion' do
+  scenario 'must be signed in' do
+    visit root_path
+    click_on 'Promoções'
+
+    expect(current_path).to eq(new_user_session_path)
+  end
+
   scenario 'from index page' do
+    user = User.create!(email: 'user@email.com', password: '123456')
+
+    login_as(user)
     visit root_path
     click_on 'Promoções'
 
@@ -10,6 +20,9 @@ feature 'Admin registers a promotion' do
   end
 
   scenario 'successfully' do
+    user = User.create!(email: 'user@email.com', password: '123456')
+
+    login_as(user)
     visit root_path
     click_on 'Promoções'
     click_on 'Registrar uma promoção'
@@ -29,6 +42,7 @@ feature 'Admin registers a promotion' do
     expect(page).to have_content('CYBER15')
     expect(page).to have_content('22/12/2033')
     expect(page).to have_content('90')
+    expect(page).to have_content('Cadastrada por: user@email.com')
     expect(page).to have_link('Voltar')
   end
 end
