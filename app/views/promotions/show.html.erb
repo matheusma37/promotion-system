@@ -13,7 +13,18 @@
   <dt><%= l(@promotion.expiration_date) %></dt>
   <dd>Quantidade de Cupoms</dd>
   <dt><%= @promotion.coupon_quantity %></dt>
+
+  <% if @promotion.approved? %>
+    <dd>Status: </dd>
+    <dt>Aprovada</dt>
+  <% end %>
 </dl>
+
+<% unless current_user.eql?(@promotion.user) %>
+  <%= link_to 'Aprovar promoção',
+              approve_promotion_path(@promotion),
+              method: :post %>
+<% end %>
 
 <%= link_to 'Gerar cupons',
             generate_coupons_promotion_path(@promotion),
