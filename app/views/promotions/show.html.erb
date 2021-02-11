@@ -26,9 +26,11 @@
               method: :post %>
 <% end %>
 
-<%= link_to 'Gerar cupons',
-            generate_coupons_promotion_path(@promotion),
-            method: :post %>
+<% unless @promotion.all_coupons_generated? %>
+  <%= link_to 'Gerar cupons',
+              generate_coupons_promotion_path(@promotion),
+              method: :post %>
+<% end %>
 
 <% @promotion.coupons.each do |coupon| %>
   <div id='coupon-<%= coupon.id %>'>

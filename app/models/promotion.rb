@@ -14,6 +14,10 @@ class Promotion < ApplicationRecord
     end
   end
 
+  def all_coupons_generated?
+    coupons.count == coupon_quantity
+  end
+
   def approve!(approval_user)
     PromotionApproval.create(promotion: self, user: approval_user)
   end

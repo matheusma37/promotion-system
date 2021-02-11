@@ -1,1 +1,1 @@
-ApplicationController = Class.new(ActionController::Base)
+class ApplicationController < ActionController::Base; end

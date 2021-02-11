@@ -2,9 +2,11 @@ require 'rails_helper'
 
 feature 'Admin generates coupons' do
   scenario 'of a promotion' do
+    user = User.create!(email: 'user@email.com', password: '123456')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033')
+                                  expiration_date: '22/12/2033', user: user)
+    login_as user, scope: :user
 
     visit root_path
     click_on 'Promoções'
@@ -19,18 +21,19 @@ feature 'Admin generates coupons' do
     expect(page).not_to have_content('NATAL10-0101')
   end
 
-  # TODO: Implementar essa feature
   scenario 'hide button if all coupons were generated' do
-    pending
+    user = User.create!(email: 'user@email.com', password: '123456')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033')
+                                  expiration_date: '22/12/2033', user: user)
+    login_as user, scope: :user
 
     visit root_path
     click_on 'Promoções'
     click_on 'Natal'
     click_on 'Gerar cupons'
 
+    promotion.reload
     expect(promotion.coupons.size).to eq(promotion.coupon_quantity)
     expect(page).not_to have_link('Gerar cupons',
                                   href: generate_coupons_promotion_path(promotion))
