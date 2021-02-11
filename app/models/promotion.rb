@@ -1,5 +1,5 @@
 class Promotion < ApplicationRecord
-  has_many :coupons
+  has_many :coupons, dependent: :destroy
   has_one :promotion_approval
   belongs_to :user
 
@@ -7,9 +7,11 @@ class Promotion < ApplicationRecord
   validates :code, uniqueness: true
 
   def generate_coupons!
-    Coupon.transaction do
-      1.upto(coupon_quantity).map do |index|
-        coupons.create!(code: "#{code}-#{format('%04d', index)}")
+    if approved?
+      Coupon.transaction do
+        (coupons.size + 1).upto(coupon_quantity).map do |index|
+          coupons.create!(code: "#{code}-#{format('%04d', index)}")
+        end
       end
     end
   end

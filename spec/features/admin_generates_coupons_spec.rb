@@ -13,12 +13,14 @@ feature 'Admin generates coupons' do
   end
 
   scenario 'of a promotion' do
-    user = User.create!(email: 'user@email.com', password: '123456')
+    creator = User.create!(email: 'creator@email.com', password: '123456')
+    approver = User.create!(email: 'approver@email.com', password: '123456')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: user)
-    login_as user, scope: :user
+                                  expiration_date: '22/12/2033', user: creator)
+    login_as creator, scope: :user
 
+    promotion.approve!(approver)
     visit root_path
     click_on 'Promoções'
     click_on 'Natal'
@@ -33,12 +35,14 @@ feature 'Admin generates coupons' do
   end
 
   scenario 'hide button if all coupons were generated' do
-    user = User.create!(email: 'user@email.com', password: '123456')
+    creator = User.create!(email: 'creator@email.com', password: '123456')
+    approver = User.create!(email: 'approver@email.com', password: '123456')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: user)
-    login_as user, scope: :user
+                                  expiration_date: '22/12/2033', user: creator)
+    login_as creator, scope: :user
 
+    promotion.approve!(approver)
     visit root_path
     click_on 'Promoções'
     click_on 'Natal'

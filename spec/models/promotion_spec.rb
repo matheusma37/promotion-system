@@ -50,13 +50,15 @@ describe Promotion do
 
   context '#generate_coupons!' do
     it 'generate coupons of coupon_quantity' do
-      user = User.create!(email: 'user@email.com', password: '123456')
-      promotion = Promotion.create!(
-        name: 'Natal', description: '', code: 'NATAL10',
-        coupon_quantity: 100, discount_rate: 10,
-        expiration_date: '2021-10-10', user: user
-      )
+      creator = User.create!(email: 'user@email.com', password: '123456')
+      approver = User.create!(email: 'approval_user@email.com', password: '123456')
+      promotion = Promotion.create!(name: 'Natal',
+                                    description: 'Promoção de Natal',
+                                    code: 'NATAL10', discount_rate: 10,
+                                    coupon_quantity: 100,
+                                    expiration_date: '22/12/2033', user: creator)
 
+      promotion.approve!(approver)
       promotion.generate_coupons!
 
       expect(promotion.coupons.size).to eq(promotion.coupon_quantity)
@@ -68,13 +70,15 @@ describe Promotion do
     end
 
     it 'do not generate if coupon code already exists' do
-      user = User.create!(email: 'user@email.com', password: '123456')
-      promotion = Promotion.create!(
-        name: 'Natal', description: '', code: 'NATAL10',
-        coupon_quantity: 100, discount_rate: 10,
-        expiration_date: '2021-10-10', user: user
-      )
+      creator = User.create!(email: 'user@email.com', password: '123456')
+      approver = User.create!(email: 'approval_user@email.com', password: '123456')
+      promotion = Promotion.create!(name: 'Natal',
+                                    description: 'Promoção de Natal',
+                                    code: 'NATAL10', discount_rate: 10,
+                                    coupon_quantity: 100,
+                                    expiration_date: '22/12/2033', user: creator)
 
+      promotion.approve!(approver)
       promotion.coupons.create!(code: 'NATAL10-0030')
 
       expect { promotion.generate_coupons! }.to raise_error(ActiveRecord::RecordNotUnique)
@@ -82,23 +86,53 @@ describe Promotion do
       expect(promotion.coupons.reload.size).to eq(1)
     end
 
-    # TODO: Implementar essa feature
     it 'generate remainder of the coupon codes' do
-      pending
+      creator = User.create!(email: 'user@email.com', password: '123456')
+      approver = User.create!(email: 'approval_user@email.com', password: '123456')
       promotion = Promotion.create!(name: 'Natal',
                                     description: 'Promoção de Natal',
                                     code: 'NATAL10', discount_rate: 10,
                                     coupon_quantity: 100,
-                                    expiration_date: '22/12/2033')
+                                    expiration_date: '22/12/2033', user: creator)
+
+      promotion.approve!(approver)
       promotion.coupons.create!(code: 'NATAL10-0001')
       promotion.coupons.create!(code: 'NATAL10-0002')
       promotion.coupons.create!(code: 'NATAL10-0003')
       promotion.coupons.create!(code: 'NATAL10-0004')
       promotion.coupons.create!(code: 'NATAL10-0005')
 
-      expect { promotion.generate_coupons! }.to raise_error(ActiveRecord::RecordNotUnique)
+      expect { promotion.generate_coupons! }.not_to raise_error(ActiveRecord::RecordNotUnique)
 
       expect(promotion.coupons.size).to eq(promotion.coupon_quantity)
+    end
+
+    it 'just generates coupons if promotion was approved' do
+      creator = User.create!(email: 'creator@email.com', password: '123456')
+      approver = User.create!(email: 'approver@email.com', password: '123456')
+      promotion = Promotion.create!(name: 'Natal',
+                                    description: 'Promoção de Natal',
+                                    code: 'NATAL10', discount_rate: 10,
+                                    coupon_quantity: 100,
+                                    expiration_date: '22/12/2033', user: creator)
+
+      promotion.approve!(approver)
+      promotion.generate_coupons!
+
+      expect(promotion.coupons.size).to eq(promotion.coupon_quantity)
+    end
+
+    it 'does not generate coupons if promotion was not approved' do
+      creator = User.create!(email: 'creator@email.com', password: '123456')
+      promotion = Promotion.create!(name: 'Natal',
+                                    description: 'Promoção de Natal',
+                                    code: 'NATAL10', discount_rate: 10,
+                                    coupon_quantity: 100,
+                                    expiration_date: '22/12/2033', user: creator)
+
+      promotion.generate_coupons!
+
+      expect(promotion.coupons.size).not_to eq(promotion.coupon_quantity)
     end
   end
 
@@ -108,13 +142,13 @@ describe Promotion do
       promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                     code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
                                     expiration_date: '22/12/2033', user: creator)
-      approval_user = User.create!(email: 'approval_user@email.com', password: '123456')
+      approver = User.create!(email: 'approval_user@email.com', password: '123456')
 
-      promotion.approve!(approval_user)
+      promotion.approve!(approver)
       promotion.reload
 
       expect(promotion.approved?).to eq(true)
-      expect(promotion.approver).to eq(approval_user)
+      expect(promotion.approver).to eq(approver)
     end
 
     it 'should not approve if same user' do
