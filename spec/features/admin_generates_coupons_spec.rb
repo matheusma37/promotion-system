@@ -34,6 +34,50 @@ feature 'Admin generates coupons' do
     expect(page).not_to have_content('NATAL10-0101')
   end
 
+  scenario 'hide button if promotion was not approved' do
+    creator = User.create!(email: 'creator@email.com', password: '123456')
+    approver = User.create!(email: 'approver@email.com', password: '123456')
+    promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
+                                  code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                  expiration_date: '22/12/2033', user: creator)
+    login_as creator, scope: :user
+
+    visit root_path
+    click_on 'Promoções'
+    click_on 'Natal'
+
+    expect(page).not_to have_link('Gerar cupons',
+                                  href: generate_coupons_promotion_path(promotion))
+  end
+
+  scenario 'hide button if promotion was not approved' do
+    creator = User.create!(email: 'creator@email.com', password: '123456')
+    promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
+                                  code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                  expiration_date: '22/12/2033', user: creator)
+    login_as creator, scope: :user
+
+    visit root_path
+    click_on 'Promoções'
+    click_on 'Natal'
+
+    expect(page).not_to have_link('Gerar cupons',
+                                  href: generate_coupons_promotion_path(promotion))
+  end
+
+  scenario 'requests a promotion that was not approved', type: :request do
+    creator = User.create!(email: 'creator@email.com', password: '123456')
+    promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
+                                  code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                  expiration_date: '22/12/2033', user: creator)
+    login_as creator, scope: :user
+
+    post "/promotions/#{promotion.id}/generate_coupons"
+
+    promotion.reload
+    expect(promotion.coupons.size).to eq(0)
+  end
+
   scenario 'hide button if all coupons were generated' do
     creator = User.create!(email: 'creator@email.com', password: '123456')
     approver = User.create!(email: 'approver@email.com', password: '123456')

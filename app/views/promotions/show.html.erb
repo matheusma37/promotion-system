@@ -26,7 +26,7 @@
               method: :post %>
 <% end %>
 
-<% unless @promotion.all_coupons_generated? %>
+<% if !@promotion.all_coupons_generated? && @promotion.approved? %>
   <%= link_to 'Gerar cupons',
               generate_coupons_promotion_path(@promotion),
               method: :post %>
