@@ -1,10 +1,23 @@
 require 'rails_helper'
 
 feature 'Admin inactivate coupon' do
-  scenario 'successfully' do
+  scenario 'and must be signed in' do
+    user = User.create!(email: 'user@email.com', password: '123456')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033')
+                                  expiration_date: '22/12/2033', user: user)
+
+    visit promotion_path(promotion)
+
+    expect(current_path).to eq(new_user_session_path)
+  end
+
+  scenario 'successfully' do
+    user = User.create!(email: 'user@email.com', password: '123456')
+    promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
+                                  code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                  expiration_date: '22/12/2033', user: user)
+    login_as user, scope: :user
 
     coupon = Coupon.create!(code: 'NATAL10-0001', promotion: promotion)
 
@@ -18,9 +31,11 @@ feature 'Admin inactivate coupon' do
   end
 
   scenario 'does not show button' do
+    user = User.create!(email: 'user@email.com', password: '123456')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033')
+                                  expiration_date: '22/12/2033', user: user)
+    login_as user, scope: :user
 
     inactive_coupon = Coupon.create!(code: 'NATAL10-0001', promotion: promotion,
                                      status: :inactive)
@@ -42,11 +57,11 @@ feature 'Admin inactivate coupon' do
   end
 
   scenario 'request an inactivated coupon to inactivate', type: :request do
-    promotion = Promotion.create!(name: 'Natal',
-                                  description: 'Promoção de Natal',
-                                  code: 'NATAL10', discount_rate: 10,
-                                  coupon_quantity: 100,
-                                  expiration_date: '22/12/2033')
+    user = User.create!(email: 'user@email.com', password: '123456')
+    promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
+                                  code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                  expiration_date: '22/12/2033', user: user)
+    login_as user, scope: :user
 
     coupon = Coupon.create!(code: 'NATAL10-0001', promotion: promotion,
                             status: :inactive)
