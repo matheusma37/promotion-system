@@ -49,9 +49,7 @@ feature 'User sign in' do
     expect(page).to have_link('Entrar')
   end
 
-  # TODO: Implementar essa feature
   scenario 'sign up' do
-    pending
     visit root_path
 
     click_on 'Entrar'
@@ -63,9 +61,9 @@ feature 'User sign in' do
       click_on 'Inscrever-se'
     end
 
+    expect(page).to have_content('Bem vindo! Você realizou seu registro com sucesso.')
     within('nav') do
-      expect(page).to have_content(user.email)
-      expect(page).to have_content('Bem vindo! Você realizou seu registro com sucesso.')
+      expect(page).to have_content('user@email.com')
       expect(page).to have_link('Sair')
       expect(page).not_to have_link('Entrar')
     end
