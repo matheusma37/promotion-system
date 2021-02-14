@@ -20,6 +20,11 @@
   <% end %>
 </dl>
 
+<h2>Categorias de Produtos</h2>
+<% @promotion.product_categories.each do |pc| %>
+  <%= pc.name %> - <%= pc.code %>
+<% end %>
+
 <% unless current_user.eql?(@promotion.user) %>
   <%= link_to 'Aprovar promoção',
               approve_promotion_path(@promotion),
