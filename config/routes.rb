@@ -15,4 +15,10 @@ Rails.application.routes.draw do
   #   post 'inactivate', on: :member
   # end
   post '/coupons/:id/inactivate', to: 'coupons#inactivate', as: :inactivate_coupon
+
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :coupons, only: [:show]
+    end
+  end
 end
