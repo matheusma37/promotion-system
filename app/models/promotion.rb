@@ -3,6 +3,8 @@ class Promotion < ApplicationRecord
   has_many :product_category_promotions, dependent: :destroy
   has_many :product_categories, through: :product_category_promotions
 
+  validate :at_least_one_category
+
   has_one :promotion_approval
 
   belongs_to :user
@@ -38,5 +40,11 @@ class Promotion < ApplicationRecord
 
   def approved_at
     promotion_approval&.created_at
+  end
+
+  private
+
+  def at_least_one_category
+    errors.add(:product_categories, 'não vinculadas') if product_categories.empty?
   end
 end

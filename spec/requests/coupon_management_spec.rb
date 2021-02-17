@@ -5,9 +5,10 @@ describe 'Coupon management' do
     it 'should render coupon details' do
       user = User.create!(email: 'user@email.com', password: '123456')
       approver = User.create!(email: 'approver@email.com', password: '123456')
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
       promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                     code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                    expiration_date: '22/12/2033', user: user)
+                                    expiration_date: '22/12/2033', user: user, product_categories: [pc])
       promotion.approve!(approver)
       promotion.generate_coupons!
       coupon = promotion.coupons.last

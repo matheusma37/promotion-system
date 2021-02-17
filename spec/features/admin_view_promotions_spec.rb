@@ -3,9 +3,10 @@ require 'rails_helper'
 feature 'Admin view promotions' do
   scenario 'and must be signed in' do
     user = User.create!(email: 'user@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: user)
+                                  expiration_date: '22/12/2033', user: user, product_categories: [pc])
 
     visit promotion_path(promotion)
 
@@ -14,13 +15,14 @@ feature 'Admin view promotions' do
 
   scenario 'successfully' do
     user = User.create!(email: 'user@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                       code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                      expiration_date: '22/12/2033', user: user)
+                      expiration_date: '22/12/2033', user: user, product_categories: [pc])
     Promotion.create!(name: 'Cyber Monday', coupon_quantity: 100,
                       description: 'Promoção de Cyber Monday',
                       code: 'CYBER15', discount_rate: 15,
-                      expiration_date: '22/12/2033', user: user)
+                      expiration_date: '22/12/2033', user: user, product_categories: [pc])
     login_as user, scope: :user
 
     visit root_path
@@ -36,13 +38,14 @@ feature 'Admin view promotions' do
 
   scenario 'and view details' do
     user = User.create!(email: 'user@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                       code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                      expiration_date: '22/12/2033', user: user)
+                      expiration_date: '22/12/2033', user: user, product_categories: [pc])
     Promotion.create!(name: 'Cyber Monday', coupon_quantity: 90,
                       description: 'Promoção de Cyber Monday',
                       code: 'CYBER15', discount_rate: 15,
-                      expiration_date: '22/12/2033', user: user)
+                      expiration_date: '22/12/2033', user: user, product_categories: [pc])
     login_as user, scope: :user
 
     visit root_path
@@ -69,9 +72,10 @@ feature 'Admin view promotions' do
 
   scenario 'and return to home page' do
     user = User.create!(email: 'user@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                       code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                      expiration_date: '22/12/2033', user: user)
+                      expiration_date: '22/12/2033', user: user, product_categories: [pc])
     login_as user, scope: :user
 
     visit root_path
@@ -83,9 +87,10 @@ feature 'Admin view promotions' do
 
   scenario 'and return to promotions page' do
     user = User.create!(email: 'user@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                       code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                      expiration_date: '22/12/2033', user: user)
+                      expiration_date: '22/12/2033', user: user, product_categories: [pc])
     login_as user, scope: :user
 
     visit root_path

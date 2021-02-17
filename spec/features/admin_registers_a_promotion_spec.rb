@@ -21,6 +21,7 @@ feature 'Admin registers a promotion' do
 
   scenario 'successfully' do
     user = User.create!(email: 'user@email.com', password: '123456')
+    ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
 
     login_as(user)
     visit root_path
@@ -33,6 +34,7 @@ feature 'Admin registers a promotion' do
     fill_in 'Desconto', with: '15'
     fill_in 'Quantidade de cupons', with: '90'
     fill_in 'Data de término', with: '22/12/2033'
+    check 'Smartphones'
     click_on 'Criar promoção'
 
     expect(current_path).to eq(promotion_path(Promotion.last))
@@ -46,7 +48,7 @@ feature 'Admin registers a promotion' do
     expect(page).to have_link('Voltar')
   end
 
-  scenario 'and choose product categories' do
+  scenario 'and choose many product categories' do
     ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     ProductCategory.create!(name: 'Monitores', code: 'Display')
     ProductCategory.create!(name: 'Jogos', code: 'GAME')

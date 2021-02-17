@@ -5,9 +5,10 @@ RSpec.describe PromotionApproval, type: :model do
     describe 'different_user' do
       it 'is different' do
         creator = User.create!(email: 'creator@email.com', password: '123456')
+        pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
         promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                       code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                      expiration_date: '22/12/2033', user: creator)
+                                      expiration_date: '22/12/2033', user: creator, product_categories: [pc])
         approval_user = User.create!(email: 'approval_user@email.com', password: '123456')
 
         approval = PromotionApproval.new(promotion: promotion, user: approval_user)
@@ -18,9 +19,10 @@ RSpec.describe PromotionApproval, type: :model do
 
       it 'is the same' do
         creator = User.create!(email: 'creator@email.com', password: '123456')
+        pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
         promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                       code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                      expiration_date: '22/12/2033', user: creator)
+                                      expiration_date: '22/12/2033', user: creator, product_categories: [pc])
 
         approval = PromotionApproval.new(promotion: promotion, user: creator)
 

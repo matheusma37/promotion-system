@@ -3,9 +3,10 @@ require 'rails_helper'
 feature 'Admin generates coupons' do
   scenario 'and must be signed in' do
     user = User.create!(email: 'user@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: user)
+                                  expiration_date: '22/12/2033', user: user, product_categories: [pc])
 
     visit promotion_path(promotion)
 
@@ -15,9 +16,10 @@ feature 'Admin generates coupons' do
   scenario 'of a promotion' do
     creator = User.create!(email: 'creator@email.com', password: '123456')
     approver = User.create!(email: 'approver@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: creator)
+                                  expiration_date: '22/12/2033', user: creator, product_categories: [pc])
     login_as creator, scope: :user
 
     promotion.approve!(approver)
@@ -36,9 +38,10 @@ feature 'Admin generates coupons' do
 
   scenario 'hide button if promotion was not approved' do
     creator = User.create!(email: 'creator@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: creator)
+                                  expiration_date: '22/12/2033', user: creator, product_categories: [pc])
     login_as creator, scope: :user
 
     visit root_path
@@ -51,9 +54,10 @@ feature 'Admin generates coupons' do
 
   scenario 'hide button if promotion was not approved' do
     creator = User.create!(email: 'creator@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: creator)
+                                  expiration_date: '22/12/2033', user: creator, product_categories: [pc])
     login_as creator, scope: :user
 
     visit root_path
@@ -66,9 +70,10 @@ feature 'Admin generates coupons' do
 
   scenario 'requests a promotion that was not approved', type: :request do
     creator = User.create!(email: 'creator@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: creator)
+                                  expiration_date: '22/12/2033', user: creator, product_categories: [pc])
     login_as creator, scope: :user
 
     post "/promotions/#{promotion.id}/generate_coupons"
@@ -80,9 +85,10 @@ feature 'Admin generates coupons' do
   scenario 'hide button if all coupons were generated' do
     creator = User.create!(email: 'creator@email.com', password: '123456')
     approver = User.create!(email: 'approver@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: creator)
+                                  expiration_date: '22/12/2033', user: creator, product_categories: [pc])
     login_as creator, scope: :user
 
     promotion.approve!(approver)

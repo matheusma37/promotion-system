@@ -6,16 +6,15 @@ describe Promotion do
       promotion = Promotion.new
 
       expect(promotion.valid?).to eq false
-      expect(promotion.errors.count).to eq 6
+      expect(promotion.errors.count).to eq 7
     end
 
     it 'discription is optional' do
       user = User.create!(email: 'user@email.com', password: '123456')
-      promotion = Promotion.new(
-        name: 'Natal', description: '', code: 'NAT',
-        coupon_quantity: 10, discount_rate: 10,
-        expiration_date: '2021-10-10', user: user
-      )
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
+      promotion = Promotion.new(name: 'Natal', description: 'Promoção de Natal',
+                                code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                expiration_date: '22/12/2033', user: user, product_categories: [pc])
 
       expect(promotion.valid?).to eq true
     end
@@ -33,18 +32,31 @@ describe Promotion do
       expect(promotion.errors[:expiration_date]).to include('não pode ficar em'\
                                                             ' branco')
       expect(promotion.errors[:user]).to include('é obrigatório(a)')
+      expect(promotion.errors[:product_categories]).to include('não vinculadas')
     end
 
     it 'code must be uniq' do
       user = User.create!(email: 'user@email.com', password: '123456')
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
       Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                         code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                        expiration_date: '22/12/2033', user: user)
+                        expiration_date: '22/12/2033', user: user, product_categories: [pc])
       promotion = Promotion.new(code: 'NATAL10')
 
       promotion.valid?
 
       expect(promotion.errors[:code]).to include('já está em uso')
+    end
+
+    it 'has at least one attached category' do
+      user = User.create!(email: 'user@email.com', password: '123456')
+      promotion = Promotion.new(name: 'Natal', description: 'Promoção de Natal',
+                                code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                expiration_date: '22/12/2033', user: user)
+
+      promotion.valid?
+
+      expect(promotion.errors[:product_categories]).to include('não vinculadas')
     end
   end
 
@@ -52,11 +64,10 @@ describe Promotion do
     it 'generate coupons of coupon_quantity' do
       creator = User.create!(email: 'user@email.com', password: '123456')
       approver = User.create!(email: 'approval_user@email.com', password: '123456')
-      promotion = Promotion.create!(name: 'Natal',
-                                    description: 'Promoção de Natal',
-                                    code: 'NATAL10', discount_rate: 10,
-                                    coupon_quantity: 100,
-                                    expiration_date: '22/12/2033', user: creator)
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
+      promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
+                                    code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                    expiration_date: '22/12/2033', user: creator, product_categories: [pc])
 
       promotion.approve!(approver)
       promotion.generate_coupons!
@@ -72,11 +83,10 @@ describe Promotion do
     it 'do not generate if coupon code already exists' do
       creator = User.create!(email: 'user@email.com', password: '123456')
       approver = User.create!(email: 'approval_user@email.com', password: '123456')
-      promotion = Promotion.create!(name: 'Natal',
-                                    description: 'Promoção de Natal',
-                                    code: 'NATAL10', discount_rate: 10,
-                                    coupon_quantity: 100,
-                                    expiration_date: '22/12/2033', user: creator)
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
+      promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
+                                    code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                    expiration_date: '22/12/2033', user: creator, product_categories: [pc])
 
       promotion.approve!(approver)
       promotion.coupons.create!(code: 'NATAL10-0030')
@@ -89,11 +99,10 @@ describe Promotion do
     it 'generate remainder of the coupon codes' do
       creator = User.create!(email: 'user@email.com', password: '123456')
       approver = User.create!(email: 'approval_user@email.com', password: '123456')
-      promotion = Promotion.create!(name: 'Natal',
-                                    description: 'Promoção de Natal',
-                                    code: 'NATAL10', discount_rate: 10,
-                                    coupon_quantity: 100,
-                                    expiration_date: '22/12/2033', user: creator)
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
+      promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
+                                    code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                    expiration_date: '22/12/2033', user: creator, product_categories: [pc])
 
       promotion.approve!(approver)
       promotion.coupons.create!(code: 'NATAL10-0001')
@@ -110,11 +119,10 @@ describe Promotion do
     it 'just generates coupons if promotion was approved' do
       creator = User.create!(email: 'creator@email.com', password: '123456')
       approver = User.create!(email: 'approver@email.com', password: '123456')
-      promotion = Promotion.create!(name: 'Natal',
-                                    description: 'Promoção de Natal',
-                                    code: 'NATAL10', discount_rate: 10,
-                                    coupon_quantity: 100,
-                                    expiration_date: '22/12/2033', user: creator)
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
+      promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
+                                    code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                    expiration_date: '22/12/2033', user: creator, product_categories: [pc])
 
       promotion.approve!(approver)
       promotion.generate_coupons!
@@ -124,11 +132,10 @@ describe Promotion do
 
     it 'does not generate coupons if promotion was not approved' do
       creator = User.create!(email: 'creator@email.com', password: '123456')
-      promotion = Promotion.create!(name: 'Natal',
-                                    description: 'Promoção de Natal',
-                                    code: 'NATAL10', discount_rate: 10,
-                                    coupon_quantity: 100,
-                                    expiration_date: '22/12/2033', user: creator)
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
+      promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
+                                    code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
+                                    expiration_date: '22/12/2033', user: creator, product_categories: [pc])
 
       promotion.generate_coupons!
 
@@ -139,10 +146,11 @@ describe Promotion do
   context '#approve!' do
     it 'should generate a PromotionApproval object' do
       creator = User.create!(email: 'creator@email.com', password: '123456')
+      approver = User.create!(email: 'approver@email.com', password: '123456')
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
       promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                     code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                    expiration_date: '22/12/2033', user: creator)
-      approver = User.create!(email: 'approval_user@email.com', password: '123456')
+                                    expiration_date: '22/12/2033', user: creator, product_categories: [pc])
 
       promotion.approve!(approver)
       promotion.reload
@@ -153,9 +161,10 @@ describe Promotion do
 
     it 'should not approve if same user' do
       creator = User.create!(email: 'creator@email.com', password: '123456')
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
       promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                     code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                    expiration_date: '22/12/2033', user: creator)
+                                    expiration_date: '22/12/2033', user: creator, product_categories: [pc])
 
       promotion.approve!(creator)
       promotion.reload

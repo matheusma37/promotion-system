@@ -3,9 +3,10 @@ require 'rails_helper'
 feature 'User sign in' do
   scenario 'and must be signed in' do
     user = User.create!(email: 'user@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: user)
+                                  expiration_date: '22/12/2033', user: user, product_categories: [pc])
 
     visit promotion_path(promotion)
 

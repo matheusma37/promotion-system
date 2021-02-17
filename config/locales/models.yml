@@ -16,6 +16,7 @@ pt-BR:
         coupon_quantity: "Quantidade de cupons"
         description: "Descrição"
         user: "Usuário"
+        product_categories: "Categorias de produto"
       user:
         email: "E-mail"
         password: "Senha"

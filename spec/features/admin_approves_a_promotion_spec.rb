@@ -3,9 +3,10 @@ require 'rails_helper'
 feature 'Admin approves a promotion' do
   scenario 'and must be signed in' do
     user = User.create!(email: 'user@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: user)
+                                  expiration_date: '22/12/2033', user: user, product_categories: [pc])
 
     visit promotion_path(promotion)
 
@@ -14,9 +15,10 @@ feature 'Admin approves a promotion' do
 
   scenario 'and must not be the promotion creator' do
     creator = User.create!(email: 'creator@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: creator)
+                                  expiration_date: '22/12/2033', user: creator, product_categories: [pc])
 
     login_as creator, scope: :user
     visit promotion_path(promotion)
@@ -26,9 +28,10 @@ feature 'Admin approves a promotion' do
 
   scenario 'and must be another user' do
     creator = User.create!(email: 'creator@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: creator)
+                                  expiration_date: '22/12/2033', user: creator, product_categories: [pc])
     approval_user = User.create!(email: 'approval_user@email.com', password: '123456')
 
     login_as approval_user, scope: :user
@@ -39,9 +42,10 @@ feature 'Admin approves a promotion' do
 
   scenario 'successfully' do
     creator = User.create!(email: 'creator@email.com', password: '123456')
+    pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
     promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                   code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                  expiration_date: '22/12/2033', user: creator)
+                                  expiration_date: '22/12/2033', user: creator, product_categories: [pc])
     approval_user = User.create!(email: 'approval_user@email.com', password: '123456')
 
     login_as approval_user, scope: :user
