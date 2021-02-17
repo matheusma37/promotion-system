@@ -1,0 +1,14 @@
+<% if @product_categories.count.zero? %>
+  <div class="warning">Nenhuma categoria cadastrada</div>
+<% end %>
+
+<% @product_categories.each do |pc| %>
+  <dl>
+    <dt>Nome:</dt>
+    <dd><%= link_to pc.name, pc %></dd>
+    <dt>Code:</dt>
+    <dd><%= pc.code %></dd>
+  </dl>
+<% end %>
+
+<%= link_to 'Voltar', root_path %>
