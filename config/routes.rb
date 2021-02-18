@@ -11,10 +11,13 @@ Rails.application.routes.draw do
     end
   end
 
-  # resources :coupons, only: [] do
-  #   post 'inactivate', on: :member
-  # end
-  post '/coupons/:id/inactivate', to: 'coupons#inactivate', as: :inactivate_coupon
+  resources :coupons, only: [] do
+    member do
+      post 'inactivate'
+      post 'activate'
+    end
+  end
+  # post '/coupons/:id/inactivate', to: 'coupons#inactivate', as: :inactivate_coupon
 
   resources :product_categories, only: %i[index show]
 

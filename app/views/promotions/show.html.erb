@@ -40,9 +40,13 @@
 <% @promotion.coupons.each do |coupon| %>
   <div id='coupon-<%= coupon.id %>'>
     <span><%= coupon.code %> (<%= t(".#{coupon.status}") %>)</span>
-    <% if coupon.active? %>
-      <p><%= link_to 'Inativar', inactivate_coupon_path(coupon), method: :post %></p>
-    <% end %>
+    <p>
+      <% if coupon.active? %>
+        <%= link_to 'Inativar', inactivate_coupon_path(coupon), method: :post %>
+      <% else %>
+        <%= link_to 'Ativar', activate_coupon_path(coupon), method: :post %>
+      <% end %>
+    </p>
   </div>
 <% end %>
 
