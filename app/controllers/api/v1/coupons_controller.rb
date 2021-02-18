@@ -15,6 +15,16 @@ module Api
           }
         ), status: :ok
       end
+
+      def burn
+        coupon = Coupon.find_by_code(params[:id])
+
+        return render status: :not_found, json: { msg: 'coupon not found' } if coupon.nil?
+
+        coupon.burned!
+
+        render json: { msg: 'coupon burned' }, status: :ok
+      end
     end
   end
 end

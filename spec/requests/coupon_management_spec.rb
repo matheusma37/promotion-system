@@ -34,19 +34,29 @@ describe 'Coupon management' do
   context 'POST coupon usage' do
     # TODO: implementar essa feature
     it 'should generate burn a coupon' do
-      pending
       user = User.create!(email: 'user@email.com', password: '123456')
       approver = User.create!(email: 'approver@email.com', password: '123456')
+      pc = ProductCategory.create!(name: 'Smartphones', code: 'SMARTPH')
       promotion = Promotion.create!(name: 'Natal', description: 'Promoção de Natal',
                                     code: 'NATAL10', discount_rate: 10, coupon_quantity: 100,
-                                    expiration_date: '22/12/2033', user: user)
+                                    expiration_date: '22/12/2033', user: user, product_categories: [pc])
       promotion.approve!(approver)
       promotion.generate_coupons!
       coupon = promotion.coupons.last
 
       post "/api/v1/coupons/#{coupon.code}/burn"
+      json_response = JSON.parse(response.body, symbolize_names: true)
 
       expect(response).to have_http_status(:ok)
+      expect(json_response[:msg]).to eq('coupon burned')
+      expect(coupon.reload.status).to eq('burned')
+    end
+
+    it 'should return 404 if coupon code does not exist' do
+      get '/api/v1/coupons/test'
+      json_response = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response).to have_http_status(:not_found)
       expect(json_response[:msg]).to eq('coupon not found')
     end
   end
