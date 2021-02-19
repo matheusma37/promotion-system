@@ -1,0 +1,14 @@
+<h1>Editar Categoria</h1>
+
+<% if @product_category.errors.any? %>
+  <div class='alert'>
+    <p>Confira os erros abaixo:</p>
+    <ul>
+      <% @product_category.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= render 'form' %>

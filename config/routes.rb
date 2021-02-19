@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   end
   # post '/coupons/:id/inactivate', to: 'coupons#inactivate', as: :inactivate_coupon
 
-  resources :product_categories, only: %i[index show]
+  resources :product_categories, only: %i[index show new create edit update]
 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do

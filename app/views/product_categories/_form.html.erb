@@ -1,0 +1,12 @@
+<%= form_with model: @product_category do |f| %>
+  <div>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  <div>
+    <%= f.label :code %>
+    <%= f.text_field :code %>
+  </div>
+
+  <%= f.submit %>
+<% end %>
