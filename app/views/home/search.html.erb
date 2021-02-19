@@ -1,0 +1,12 @@
+<h1>Resultados da busca</h1>
+<h2>Promoções</h2>
+
+<% if @promotions.empty? %>
+  <p>Nenhum resultado encontrado para a pesquisa "<%= @qpromotion %>" em promoções</p>
+<% else %>
+  <ul>
+    <% @promotions.each do |promotion| %>
+      <li><%= link_to promotion.name, promotion %>: <%= promotion.code %></li>
+    <% end %>
+  </ul>
+<% end %>

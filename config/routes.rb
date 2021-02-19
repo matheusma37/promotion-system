@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   get '/', to: 'home#index'
   root 'home#index'
 
+  get '/search', to: 'home#search'
+
   devise_for :users
 
   resources :promotions, only: %i[index show new create edit update destroy] do

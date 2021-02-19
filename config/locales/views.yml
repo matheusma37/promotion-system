@@ -3,3 +3,4 @@ pt-BR:
     show:
       active: 'Ativo'
       inactive: 'Inativo'
+      burned: 'Queimado'
